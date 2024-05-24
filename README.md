@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Libraries that needs to be installed:
 
-## Getting Started
+# nextui => Component library
 
-First, run the development server:
+- npm install --save-exact @nextui-org/react@2.2.9 framer-motion
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# next-auth | authjs => Authentication
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+\_ Github O'Auth
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Prisma => SQL Db Lite
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- npm install prisma
+- npx prisma init --datasource-provider sqlite
+- npx prisma migrate dev
 
-## Learn More
+# Auth Setup
 
-To learn more about Next.js, take a look at the following resources:
+- Step 1:
+  -- Create an OAuth app and generate a client_id and client_secret
+  -- github.com/settings/applications/new
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Step 2:
+  -- Add AUTH_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET to a .env.local file
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Step 3:
+  -- Install these packages:
+  --- @auth/core@0.18.1
+  --- @auth/prisma-adapter@1.0.6
+  --- next-auth@5.0.0-beta.3
 
-## Deploy on Vercel
+- Step 4:
+  -- Make a 'auth.ts' file in the 'src' folder. Setup NextAuth and the PrismaAdapter in there.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Step 5:
+  -- Setup the 'app/api/auth[...nextauth]/route.ts' file to handle the requests between Githubs servers and ours
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Step 6:
+  -- Make server actions to signin/signout the user
+
+# Recommended Initial Design
+
+- Identify all the different routes you want your app to have + the data that each shows
+- Make 'path helper' functions
+- Create your routing folders + page.tsx files based on step #1
+- Identify the places where data changes in your app
+- Make empty server actions for each of those
+- Add in comments on what paths you'll need to revalidate for each server action
+
+# What makes a page "dynamic"?
+
+- Calling a 'dynamic function' or referencing a 'dynamic variable' when your route renders
+  -- cookies.set() cookies.delete()
+  -- useSearchParams() searchParams prop
+
+- Assigning specific 'route segment config' options
+  -- export const dynamic = 'force-dynamic'
+  -- export const revalidate = 0
+
+- Calling 'fetch' and opting out of caching of the response
+  -- fetch('...', { next: { revalidate: 0 } });
+
+- Using a dynamic route
+  -- /snippets/[id]/page.tsx
+  -- /snippets/[id]/edit/page.tsx
