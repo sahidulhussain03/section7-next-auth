@@ -4,7 +4,6 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import path from "path";
 import paths from "@/utils/paths";
 import { redirect } from "next/navigation";
 
@@ -46,7 +45,7 @@ export const CreatePost = async (
             }
         }
     }
-
+    console.log(session)
     const topic = await db.topic.findFirst({
         where: { slug }
     })
@@ -67,7 +66,7 @@ export const CreatePost = async (
             data: {
                 title: result.data.title,
                 content: result.data.content,
-                userId: "asdf",
+                userId: session.user.id,
                 topicId: topic.id
             }
         });

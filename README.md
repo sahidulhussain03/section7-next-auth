@@ -63,3 +63,5 @@ Libraries that needs to be installed:
 - Using a dynamic route
   -- /snippets/[id]/page.tsx
   -- /snippets/[id]/edit/page.tsx
+
+![alt text](image.png)
